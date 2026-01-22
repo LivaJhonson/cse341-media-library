@@ -5,7 +5,7 @@ const doc = {
     title: 'Media Library API',
     description: 'Part 1: CRUD Operations for Movies and Directors',
   },
-  host: 'https://cse341-media-library.onrender.com',
+  host: 'cse341-media-library.onrender.com',
   schemes: ['https'],
 };
 
