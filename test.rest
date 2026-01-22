@@ -1,0 +1,36 @@
+### GET ALL MOVIES
+GET http://localhost:8080/movies
+
+### GET MOVIE BY ID (Replace with an actual ID from your database)
+GET http://localhost:8080/movies/65af...
+
+### CREATE A MOVIE (POST)
+POST http://localhost:8080/movies
+Content-Type: application/json
+
+{
+  "title": "Interstellar",
+  "releaseYear": 2014,
+  "genre": "Sci-Fi",
+  "rating": "PG-13",
+  "runtime": 169,
+  "director": "Christopher Nolan",
+  "studio": "Paramount"
+}
+
+### UPDATE A MOVIE (PUT)
+PUT http://localhost:8080/movies/69723a3e91b27a3b5b44e57e
+Content-Type: application/json
+
+{
+  "title": "Interstellar",
+  "releaseYear": 2014,
+  "genre": "Sci-Fi",
+  "rating": "R",
+  "runtime": 169,
+  "director": "Christopher Nolan",
+  "studio": "Paramount"
+}
+
+### DELETE A MOVIE
+DELETE http://localhost:8080/movies/65af...
