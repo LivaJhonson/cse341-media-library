@@ -5,10 +5,10 @@
     "description": "Part 1: CRUD Operations for Movies and Directors",
     "version": "1.0.0"
   },
-  "host": "localhost:8080",
+  "host": "https://cse341-media-library.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "paths": {
     "/api-docs": {

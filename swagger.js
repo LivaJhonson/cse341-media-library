@@ -6,7 +6,7 @@ const doc = {
     description: 'Part 1: CRUD Operations for Movies and Directors',
   },
   host: 'https://cse341-media-library.onrender.com',
-  schemes: ['http'],
+  schemes: ['https'],
 };
 
 const outputFile = './swagger.json';
