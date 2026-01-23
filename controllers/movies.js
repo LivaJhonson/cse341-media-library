@@ -5,10 +5,8 @@ const ObjectId = require('mongodb').ObjectId;
 const getAll = async (req, res) => {
   try {
     const result = await mongodb.getDb().db().collection('movies').find();
-    result.toArray().then((lists) => {
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json(lists);
-    });
+    const lists = await result.toArray();
+    res.status(200).json(lists);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -17,15 +15,17 @@ const getAll = async (req, res) => {
 // GET single movie by ID
 const getSingle = async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
-    res.status(400).json('Must use a valid movie id to find a movie.');
+    return res.status(400).json({ message: 'Must use a valid movie id to find a movie.' });
   }
-  const movieId = new ObjectId(req.params.id);
   try {
+    const movieId = new ObjectId(req.params.id);
     const result = await mongodb.getDb().db().collection('movies').find({ _id: movieId });
-    result.toArray().then((lists) => {
-      res.setHeader('Content-Type', 'application/json');
+    const lists = await result.toArray();
+    if (lists.length > 0) {
       res.status(200).json(lists[0]);
-    });
+    } else {
+      res.status(404).json({ message: 'Movie not found.' });
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -33,6 +33,10 @@ const getSingle = async (req, res) => {
 
 // POST - Create Movie with 7-field Validation
 const createMovie = async (req, res) => {
+  if (!req.body.title || !req.body.releaseYear || !req.body.genre || !req.body.rating || !req.body.runtime || !req.body.director || !req.body.studio) {
+    return res.status(400).json({ message: 'Missing required fields. Please provide all 7 fields.' });
+  }
+
   const movie = {
     title: req.body.title,
     releaseYear: req.body.releaseYear,
@@ -42,12 +46,6 @@ const createMovie = async (req, res) => {
     director: req.body.director,
     studio: req.body.studio
   };
-
-  // Validation Check
-  if (!movie.title || !movie.releaseYear || !movie.genre || !movie.rating || !movie.runtime || !movie.director || !movie.studio) {
-    res.status(400).json({ message: 'Missing required fields. Please provide all 7 fields.' });
-    return;
-  }
 
   try {
     const response = await mongodb.getDb().db().collection('movies').insertOne(movie);
@@ -60,22 +58,31 @@ const createMovie = async (req, res) => {
 // PUT - Update Movie
 const updateMovie = async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
-    res.status(400).json('Must use a valid movie id to update.');
+    return res.status(400).json({ message: 'Must use a valid movie id to update.' });
   }
-  const movieId = new ObjectId(req.params.id);
-  const movie = {
-    title: req.body.title,
-    releaseYear: req.body.releaseYear,
-    genre: req.body.genre,
-    rating: req.body.rating,
-    runtime: req.body.runtime,
-    director: req.body.director,
-    studio: req.body.studio
-  };
-  
+
+  // Adding validation to PUT as well
+  if (!req.body.title || !req.body.releaseYear || !req.body.genre || !req.body.rating || !req.body.runtime || !req.body.director || !req.body.studio) {
+    return res.status(400).json({ message: 'Data to update cannot be empty and must include all 7 fields.' });
+  }
+
   try {
+    const movieId = new ObjectId(req.params.id);
+    const movie = {
+      title: req.body.title,
+      releaseYear: req.body.releaseYear,
+      genre: req.body.genre,
+      rating: req.body.rating,
+      runtime: req.body.runtime,
+      director: req.body.director,
+      studio: req.body.studio
+    };
     const response = await mongodb.getDb().db().collection('movies').replaceOne({ _id: movieId }, movie);
-    res.status(204).send();
+    if (response.modifiedCount > 0) {
+      res.status(204).send();
+    } else {
+      res.status(500).json({ message: 'Some error occurred while updating the movie.' });
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -84,12 +91,16 @@ const updateMovie = async (req, res) => {
 // DELETE - Delete Movie
 const deleteMovie = async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
-    res.status(400).json('Must use a valid movie id to delete.');
+    return res.status(400).json({ message: 'Must use a valid movie id to delete.' });
   }
-  const movieId = new ObjectId(req.params.id);
   try {
+    const movieId = new ObjectId(req.params.id);
     const response = await mongodb.getDb().db().collection('movies').deleteOne({ _id: movieId });
-    res.status(200).send();
+    if (response.deletedCount > 0) {
+      res.status(200).send();
+    } else {
+      res.status(500).json({ message: 'Some error occurred while deleting the movie.' });
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -5,6 +5,9 @@ const directorsController = require('../controllers/directors');
 // GET all directors
 router.get('/', directorsController.getAll);
 
+// GET single director by ID
+router.get('/:id', directorsController.getSingle);
+
 // POST a new director
 router.post('/', directorsController.createDirector);
 

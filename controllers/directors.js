@@ -12,6 +12,25 @@ const getAll = async (req, res) => {
   }
 };
 
+// GET SINGLE
+const getSingle = async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: 'Must use a valid director id to find a director.' });
+  }
+  const directorId = new ObjectId(req.params.id);
+  try {
+    const result = await mongodb.getDb().db().collection('directors').find({ _id: directorId });
+    const lists = await result.toArray();
+    if (lists.length > 0) {
+      res.status(200).json(lists[0]);
+    } else {
+      res.status(404).json({ message: 'Director not found.' });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 // CREATE (POST) - Includes Validation
 const createDirector = async (req, res) => {
   // VALIDATION: Check for required fields
@@ -78,4 +97,4 @@ const deleteDirector = async (req, res) => {
   }
 };
 
-module.exports = { getAll, createDirector, updateDirector, deleteDirector };
+module.exports = { getAll, getSingle, createDirector, updateDirector, deleteDirector };
