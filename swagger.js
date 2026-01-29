@@ -5,8 +5,8 @@ const doc = {
     title: 'Media Library API',
     description: 'CRUD Operations with OAuth Authentication',
   },
-  host: 'localhost:8080', 
-  schemes: ['http'],
+  host: 'cse341-media-library.onrender.com', 
+  schemes: ['https'],
 };
 
 const outputFile = './swagger.json';
