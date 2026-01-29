@@ -3,10 +3,10 @@ const swaggerAutogen = require('swagger-autogen')();
 const doc = {
   info: {
     title: 'Media Library API',
-    description: 'Part 1: CRUD Operations for Movies and Directors',
+    description: 'CRUD Operations with OAuth Authentication',
   },
-  host: 'cse341-media-library.onrender.com',
-  schemes: ['https'],
+  host: 'localhost:8080', 
+  schemes: ['http'],
 };
 
 const outputFile = './swagger.json';

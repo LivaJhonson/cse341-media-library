@@ -1,20 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const directorsController = require('../controllers/directors');
+const { isAuthenticated } = require('../middleware/authenticate'); // Import auth check
 
-// GET all directors
+// Public routes
 router.get('/', directorsController.getAll);
-
-// GET single director by ID
 router.get('/:id', directorsController.getSingle);
 
-// POST a new director
-router.post('/', directorsController.createDirector);
-
-// PUT (Update) a director by ID
-router.put('/:id', directorsController.updateDirector);
-
-// DELETE a director by ID
-router.delete('/:id', directorsController.deleteDirector);
+// Protected routes
+router.post('/', isAuthenticated, directorsController.createDirector);
+router.put('/:id', isAuthenticated, directorsController.updateDirector);
+router.delete('/:id', isAuthenticated, directorsController.deleteDirector);
 
 module.exports = router;
