@@ -5,10 +5,10 @@
     "description": "CRUD Operations with OAuth Authentication",
     "version": "1.0.0"
   },
-  "host": "localhost:8080",
+  "host": "cse341-media-library.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "paths": {
     "/": {
