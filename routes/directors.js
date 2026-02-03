@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const directorsController = require('../controllers/directors');
-const { isAuthenticated } = require('../middleware/authenticate'); // Import auth check
+const { isAuthenticated } = require('../middleware/auth'); // Import auth check
 
 // Public routes
 router.get('/', directorsController.getAll);

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const moviesController = require('../controllers/movies');
-const { isAuthenticated } = require('../middleware/authenticate'); // Import auth check
+const { isAuthenticated } = require('../middleware/auth'); // Import auth check
 
 // Public routes (Anyone can view)
 router.get('/', moviesController.getAll);
