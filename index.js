@@ -22,7 +22,8 @@ app
     // Added cookie settings to support HTTPS on Render
     cookie: { 
       secure: true, 
-      sameSite: 'none' 
+      sameSite: 'none',
+      httpOnly: true 
     }
   }))
   .use(passport.initialize())
@@ -30,7 +31,7 @@ app
   // Updated CORS to allow credentials (cookies) to pass through
   .use(cors({ 
     methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH'], 
-    origin: '*',
+    origin: true,
     credentials: true
   }))
   .use('/', require('./routes')); // Handing off all routing logic here
