@@ -14,27 +14,25 @@ const app = express();
 app
   .use(bodyParser.json())
   // Required for Render to trust the headers sent through their proxy
-  .set('trust proxy', 1) 
+  .set('trust proxy', 1)
   .use(session({
-    secret: "secret", 
+    secret: process.env.SESSION_SECRET || "secret",
     resave: false,
-    saveUninitialized: true,
-    // Added cookie settings to support HTTPS on Render
-    cookie: { 
-      secure: true, 
-      sameSite: 'none',
-      httpOnly: true 
+    saveUninitialized: false, // ✅ only create session if user logs in
+    cookie: {
+      secure: true,          // must be true for HTTPS on Render
+      sameSite: 'none',      // allows cross-origin cookies
+      httpOnly: true
     }
   }))
   .use(passport.initialize())
   .use(passport.session())
-  // Updated CORS to allow credentials (cookies) to pass through
-  .use(cors({ 
-    methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH'], 
-    origin: true,
-    credentials: true
+  .use(cors({
+    methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH'],
+    origin: "https://cse341-media-library.onrender.com", // allow only your domain
+    credentials: true       // ✅ allows cookies to be sent
   }))
-  .use('/', require('./routes')); // Handing off all routing logic here
+  .use('/', require('./routes')); // all routes
 
 // Passport Strategy
 passport.use(new GitHubStrategy({
@@ -47,6 +45,7 @@ passport.use(new GitHubStrategy({
   }
 ));
 
+// Passport serialize / deserialize
 passport.serializeUser((user, done) => { done(null, user); });
 passport.deserializeUser((user, done) => { done(null, user); });
 
