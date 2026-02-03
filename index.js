@@ -16,15 +16,18 @@ app
   // Required for Render to trust the headers sent through their proxy
   .set('trust proxy', 1)
   .use(session({
+    name: 'connect.sid',
     secret: process.env.SESSION_SECRET || "secret",
     resave: false,
-    saveUninitialized: false, // ✅ only create session if user logs in
+    saveUninitialized: false,
+    proxy: true,               // ✅ REQUIRED on Render
     cookie: {
-      secure: true,          // must be true for HTTPS on Render
-      sameSite: 'none',      // allows cross-origin cookies
+      secure: true,
+      sameSite: 'none',
       httpOnly: true
     }
   }))
+    
   .use(passport.initialize())
   .use(passport.session())
   .use(cors({
