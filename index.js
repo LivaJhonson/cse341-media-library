@@ -13,14 +13,26 @@ const app = express();
 
 app
   .use(bodyParser.json())
+  // Required for Render to trust the headers sent through their proxy
+  .set('trust proxy', 1) 
   .use(session({
     secret: "secret", 
     resave: false,
     saveUninitialized: true,
+    // Added cookie settings to support HTTPS on Render
+    cookie: { 
+      secure: true, 
+      sameSite: 'none' 
+    }
   }))
   .use(passport.initialize())
   .use(passport.session())
-  .use(cors({ methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH'], origin: '*'}))
+  // Updated CORS to allow credentials (cookies) to pass through
+  .use(cors({ 
+    methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH'], 
+    origin: '*',
+    credentials: true
+  }))
   .use('/', require('./routes')); // Handing off all routing logic here
 
 // Passport Strategy
